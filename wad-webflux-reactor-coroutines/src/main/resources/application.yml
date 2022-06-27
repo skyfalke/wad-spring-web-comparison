@@ -1,0 +1,20 @@
+server:
+  port: 8083
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+
+ping:
+  host: http://localhost:8080
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+pong:
+  host: http://wad-pong-container:8080

@@ -1,0 +1,86 @@
+version: "3.8"
+
+# NOTE: This is just for demonstration purposes. However, it is better to just 
+# perform a single test with a single target service running at any given time.
+# That is, launch wad-pong-container & prometheus-container only with one of the
+# target service containers set up in this file and run only the corresponding
+# function from 3_load.sh. For example:
+# - wad-mvc-container + hey_wad_mvc
+# - wad-webflux-reactor-container + hey_wad_webflux_reactor
+# - wad-webflux-reactor-coroutines-container + hey_wad_webflux_reactor_coroutines
+# - wad-webflux-coroutines-container + hey_wad_webflux_coroutines
+
+services:
+ wad-pong-container:
+  image: localhost/wad/pong:latest
+  restart: on-failure    
+  ports:
+   - 8080:8080
+  ulimits:
+    nofile:
+      soft: 65536
+      hard: 65536
+
+ wad-mvc-container:
+  image: localhost/wad/mvc:latest
+  restart: on-failure
+  depends_on:
+   - wad-pong-container
+  ports:
+   - 8081:8081
+  ulimits:
+    nofile:
+      soft: 65536
+      hard: 65536
+      
+ wad-webflux-reactor-container:
+  image: localhost/wad/webflux-reactor:latest
+  restart: on-failure
+  depends_on:
+   - wad-pong-container
+  ports:
+   - 8082:8082
+  ulimits:
+    nofile:
+      soft: 65536
+      hard: 65536
+
+ wad-webflux-reactor-coroutines-container:
+  image: localhost/wad/webflux-reactor-coroutines:latest
+  restart: on-failure
+  depends_on:
+   - wad-pong-container
+  ports:
+   - 8083:8083
+  ulimits:
+    nofile:
+      soft: 65536
+      hard: 65536
+
+ wad-webflux-coroutines-container:
+  image: localhost/wad/webflux-coroutines:latest
+  restart: on-failure
+  depends_on:
+   - wad-pong-container
+  ports:
+   - 8084:8084
+  ulimits:
+    nofile:
+      soft: 65536
+      hard: 65536
+
+ prometheus-container:
+  image: localhost/wad/prometheus:latest
+  restart: on-failure
+  depends_on:
+   - wad-pong-container
+   - wad-mvc-container
+   - wad-webflux-reactor-container
+   - wad-webflux-reactor-coroutines-container
+   - wad-webflux-coroutines-container
+  ports:
+   - 9090:9090
+  ulimits:
+    nofile:
+      soft: 65536
+      hard: 65536

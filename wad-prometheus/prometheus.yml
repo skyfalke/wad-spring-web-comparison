@@ -1,0 +1,27 @@
+global:
+  scrape_interval: 2s
+  scrape_timeout: 2s
+  evaluation_interval: 2s
+
+scrape_configs:
+  - job_name: wad
+    scrape_interval: 2s
+    metrics_path: "/actuator/prometheus"
+    scheme: "http"
+    static_configs:
+      - targets:
+          - "wad-mvc-container:8081"
+        labels:
+          name: wad-mvc
+      - targets:
+          - "wad-webflux-reactor-container:8082"
+        labels:
+          name: wad-webflux-reactor
+      - targets:
+          - "wad-webflux-reactor-coroutines-container:8083"
+        labels:
+          name: wad-webflux-reactor-coroutines
+      - targets:
+          - "wad-webflux-coroutines-container:8084"
+        labels:
+          name: wad-webflux-coroutines
